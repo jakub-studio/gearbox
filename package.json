@@ -20,6 +20,7 @@
   "packageManager": "npm@9.6.5",
   "workspaces": [
     "apps/*",
-    "packages/*"
+    "packages/*",
+    "engine/*"
   ]
 }

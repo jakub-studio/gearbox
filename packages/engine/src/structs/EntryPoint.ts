@@ -16,4 +16,3 @@ export default class EntryPoint extends Initializeable {
 		super.onInitialize();
 	}
 }
-

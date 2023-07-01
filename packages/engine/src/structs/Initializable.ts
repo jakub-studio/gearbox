@@ -5,7 +5,7 @@ export default class Initializeable {
 		this._init = true;
 	}
 
-	public get initialized () {
+	public get initialized() {
 		return this._init;
 	}
 }
