@@ -1,4 +1,8 @@
 {
 	"files.eol": "\n",
 	"typescript.tsdk": "./node_modules/typescript/lib",
+	"editor.rulers": [80, {
+		"column": 120,
+		"color": "#ff000050"
+	}]
 }

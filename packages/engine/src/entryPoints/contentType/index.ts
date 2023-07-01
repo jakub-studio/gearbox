@@ -1,5 +1,11 @@
 import { parse } from "content-type";
-import { EntryPointContentTypes, EntryPointRequestResult } from "../types";
+import { EntryPointContentTypes } from "../types";
+import { htmlContentType, htmlFileExtension } from "../types/html";
+import {
+	javascriptContentType,
+	javascriptFileExtension
+} from "../types/javascript";
+import getObjectValueWithAnyCapitalization from "utilities/object/getObjectValueWithAnyCapitalization";
 
 const contentTypeHeaderName = "content-type";
 
@@ -8,19 +14,22 @@ const _getContentTypeViaURL = (url: string): EntryPointContentTypes | null => {
 	const extension = urlParts[urlParts.length - 1];
 
 	switch (extension) {
-		case "html":
-			return "text/html";
-		case "js":
-			return "application/javascript";
+		case htmlFileExtension:
+			return htmlContentType;
+		case javascriptFileExtension:
+			return javascriptContentType;
 		default:
 			return null;
 	}
 };
 
-const _getContentTypeViaHeader = (
-	res: EntryPointRequestResult
+const _getContentTypeViaHeaders = (
+	headers: Record<string, string>
 ): EntryPointContentTypes | null => {
-	const contentTypeHeader = res.response.headers[contentTypeHeaderName];
+	const contentTypeHeader = getObjectValueWithAnyCapitalization(
+		headers,
+		contentTypeHeaderName
+	);
 
 	if (!contentTypeHeader) {
 		return null;
@@ -29,25 +38,26 @@ const _getContentTypeViaHeader = (
 	const contentType = parse(contentTypeHeader);
 
 	switch (contentType.type) {
-		case "text/html":
-			return "text/html";
-		case "application/javascript":
-			return "application/javascript";
+		case htmlContentType:
+			return htmlContentType;
+		case javascriptContentType:
+			return javascriptContentType;
 		default:
 			return null;
 	}
 };
 
 export const getContentType = (
-	res: EntryPointRequestResult
+	url: string,
+	headers: Record<string, string>
 ): EntryPointContentTypes | null => {
-	const contentTypeViaHeader = _getContentTypeViaHeader(res);
+	const contentTypeViaHeader = _getContentTypeViaHeaders(headers);
 
 	if (contentTypeViaHeader) {
 		return contentTypeViaHeader;
 	}
 
-	const contentTypeViaURL = _getContentTypeViaURL(res.url);
+	const contentTypeViaURL = _getContentTypeViaURL(url);
 
 	if (contentTypeViaURL) {
 		return contentTypeViaURL;

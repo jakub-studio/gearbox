@@ -1,3 +1,4 @@
+import { useEntryPoints } from "./entryPoints";
 import Project from "./structs/Project";
 
 interface RequestOptions {
@@ -20,3 +21,4 @@ class Engine {
 const engine = new Engine();
 
 export default engine;
+export { useEntryPoints };
