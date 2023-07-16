@@ -15,15 +15,15 @@ export interface CreateEntryPointOptions {
 const createEntryPoint = async (
 	opts: CreateEntryPointOptions
 ): Promise<EntryPoints | undefined> => {
-	const response = await fetch(opts.url, {
-		mode: "no-cors"
+	const response = await request<string>({
+		url: opts.url
 	});
 
 	console.log(response, opts);
 
 	const type = getContentType(
 		opts.url,
-		getPlainHeadersObject(response.headers)
+		response.headers
 	);
 
 	if (!type) {
@@ -33,7 +33,7 @@ const createEntryPoint = async (
 	}
 
 	if (type === htmlContentType) {
-		return new HTMLEntryPoint();
+		return new HTMLEntryPoint(response);
 	}
 
 	if (type === javascriptContentType) {

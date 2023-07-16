@@ -1,4 +1,5 @@
 {
+  "name": "gearbox",
   "private": true,
   "scripts": {
     "build": "turbo run build",
@@ -16,7 +17,6 @@
     "prettier": "^2.5.1",
     "turbo": "latest"
   },
-  "name": "gearbox",
   "packageManager": "npm@9.6.5",
   "workspaces": [
     "apps/*",

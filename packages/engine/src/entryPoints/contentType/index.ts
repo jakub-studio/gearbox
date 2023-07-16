@@ -6,6 +6,7 @@ import {
 	javascriptFileExtension
 } from "../types/javascript";
 import getObjectValueWithAnyCapitalization from "utilities/object/getObjectValueWithAnyCapitalization";
+import { AxiosHeaders, AxiosResponseHeaders } from "axios";
 
 const contentTypeHeaderName = "content-type";
 
@@ -49,7 +50,7 @@ const _getContentTypeViaHeaders = (
 
 export const getContentType = (
 	url: string,
-	headers: Record<string, string>
+	headers: {}
 ): EntryPointContentTypes | null => {
 	const contentTypeViaHeader = _getContentTypeViaHeaders(headers);
 
