@@ -1,6 +1,7 @@
 {
 	"name": "html-ast",
 	"main": "src/index.ts",
+	"version": "0.0.1",
 	"dependencies": {
 		"htmlparser2": "^9.0.0"
 	}
