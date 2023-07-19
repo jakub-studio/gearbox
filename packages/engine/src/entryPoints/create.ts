@@ -21,10 +21,9 @@ const createEntryPoint = async (
 
 	console.log(response, opts);
 
-	const type = getContentType(
-		opts.url,
-		response.headers
-	);
+	const type = getContentType(opts.url, response.headers);
+
+	console.log({ type })
 
 	if (!type) {
 		throw new Error(
@@ -33,7 +32,7 @@ const createEntryPoint = async (
 	}
 
 	if (type === htmlContentType) {
-		return new HTMLEntryPoint(response);
+		return new HTMLEntryPoint(opts, response);
 	}
 
 	if (type === javascriptContentType) {

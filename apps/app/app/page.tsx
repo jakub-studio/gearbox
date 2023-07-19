@@ -9,6 +9,10 @@ export default function Page() {
 
 	console.log(state);
 
+	state.entryPoints.forEach(entryPoint => {
+		entryPoint.process();
+	});
+
 	const onSubmit: FormEventHandler<HTMLFormElement> = useCallback(
 		e => {
 			e.preventDefault();
