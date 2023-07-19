@@ -1,17 +1,11 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
 const defaultConfig: AxiosRequestConfig = {
-	withCredentials: false
+	
 };
 
 const request = <T=string>(config: AxiosRequestConfig): Promise<AxiosResponse<T>> => {
-	return axios.request({ ...defaultConfig, ...config, ...{
-		url: "/proxy",
-		method: "GET",
-		params: {
-			url: config.url
-		}
-	} });
+	return axios.request({ ...defaultConfig, ...config });
 };
 
 export default request;

@@ -1,6 +1,9 @@
 import { AxiosResponse } from "axios";
 import EntryPoint from "../_shared";
 import { getScriptsFromAST, getTitle, parseHTML } from "html-ast";
+import proxyRequest from "../../../request/proxy";
+import joinExternalURL from "utilities/string/joinExternalURL";
+import { javascriptContentType } from "../javascript";
 
 export const htmlContentType = "text/html";
 export const htmlFileExtension = "html";
@@ -8,7 +11,10 @@ export const htmlFileExtension = "html";
 export interface HTMLScript {
 	type: "inline" | "external";
 	content: string;
+	contentType: string;
+	name?: string;
 	src?: string;
+	id?: string;
 }
 
 class HTMLEntryPoint extends EntryPoint {
@@ -17,6 +23,7 @@ class HTMLEntryPoint extends EntryPoint {
 
 	title: string | undefined;
 	scripts: HTMLScript[] = [];
+	private _processing: boolean = false;
 
 	ast;
 	
@@ -27,23 +34,60 @@ class HTMLEntryPoint extends EntryPoint {
 		this.rawHTML = response.data;
 	}
 
-	private _fetchScript (element) {
-		let type: HTMLScript["type"] = "inline";
+	private async _handleScripts () {
+		const scripts = getScriptsFromAST(this.ast);
 
-		if (element.attribs.src) {
-			type = "external";
+		for (const script of scripts) {
+			const { attribs, firstChild } = script;
+
+			let type: HTMLScript["type"] = "inline";
+
+			if (attribs.src) {
+				type = "external";
+			}
+
+			if (type === "inline") {
+				if (!("data" in firstChild)) continue;
+
+				this.scripts.push({
+					type,
+					content: firstChild.data,
+					contentType: attribs.type || javascriptContentType,
+					id: attribs.id
+				});
+
+				continue;
+			} else {
+				if (!attribs.src) continue;
+
+				console.log(this.url, attribs.src);
+				const src = joinExternalURL(this.url, attribs.src);
+				const req = await proxyRequest(src)
+
+				this.scripts.push({
+					type,
+					src,
+					content: req.data,
+					contentType: attribs.type || javascriptContentType,
+					name: attribs.src,
+					id: attribs.id
+				});
+			}
 		}
 	}
 
-	private setTitle () {
+	private _setTitle () {
 		this.title = getTitle(this.ast);
 	}
 
-	process () {
+	async process () {
+		if (this._processing) return;
+		this._processing = true;
+
 		this.ast = parseHTML(this.rawHTML);
-		this.setTitle();
-		const scripts = getScriptsFromAST(this.ast);
-		console.log(scripts);
+		this._setTitle();
+		await this._handleScripts();
+		console.log("done")
 	}
 }
 

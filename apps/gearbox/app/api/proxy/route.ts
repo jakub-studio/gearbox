@@ -1,18 +1,11 @@
-import { getServerSession } from "next-auth";
 import createPlainHeadersObject from "utilities/fetch/createPlainHeadersObject";
 import encodeInvisibleCharacters from "utilities/string/encodeInvisibleCharacters";
-import { authOptions } from "../auth/[...nextauth]/route";
+import { getToken } from "next-auth/jwt";
 
-export async function GET(request, response) {
-	/* 	return new Response("401 Unauthorized", {
-		status: 401,
-		statusText: "Unauthorized",
-		headers: {
-			"content-type": "text/plain",
-		}
-	}); */
+import { type NextRequest } from 'next/server'
 
-	const session = await getServerSession(request, response, authOptions);
+export async function GET(request: NextRequest) {
+	const session = await getToken({ req: request });
 
 	if (!session) {
 		return new Response("401 Unauthorized", {
@@ -26,6 +19,16 @@ export async function GET(request, response) {
 
 	const { searchParams } = new URL(request.url);
 	const url = searchParams.get("url");
+
+	if (!url) {
+		return new Response("400 Bad Request. No URL Specified", {
+			status: 400,
+			statusText: "Bad Request",
+			headers: {
+				"content-type": "text/plain",
+			}
+		});
+	}
 
 	let appendHeaders = false;
 	if (searchParams.get("headers") === "true") {

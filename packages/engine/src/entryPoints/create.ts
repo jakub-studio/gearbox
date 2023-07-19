@@ -1,4 +1,4 @@
-import request from "../request";
+import proxy from "../request/proxy";
 import { getContentType } from "./contentType";
 import { EntryPoints } from "./types";
 import HTMLEntryPoint, { htmlContentType } from "./types/html";
@@ -15,15 +15,11 @@ export interface CreateEntryPointOptions {
 const createEntryPoint = async (
 	opts: CreateEntryPointOptions
 ): Promise<EntryPoints | undefined> => {
-	const response = await request<string>({
-		url: opts.url
-	});
+	const response = await proxy(opts.url);
 
 	console.log(response, opts);
 
 	const type = getContentType(opts.url, response.headers);
-
-	console.log({ type })
 
 	if (!type) {
 		throw new Error(
