@@ -3,15 +3,8 @@ import createPlainHeadersObject from "utilities/fetch/createPlainHeadersObject";
 import encodeInvisibleCharacters from "utilities/string/encodeInvisibleCharacters";
 import { authOptions } from "../auth/[...nextauth]/route";
 
+// Basic forward proxy
 export async function GET(request, response) {
-	/* 	return new Response("401 Unauthorized", {
-		status: 401,
-		statusText: "Unauthorized",
-		headers: {
-			"content-type": "text/plain",
-		}
-	}); */
-
 	const session = await getServerSession(request, response, authOptions);
 
 	if (!session) {
