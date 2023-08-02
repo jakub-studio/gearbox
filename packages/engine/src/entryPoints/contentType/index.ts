@@ -6,7 +6,6 @@ import {
 	javascriptFileExtension
 } from "../types/javascript";
 import getObjectValueWithAnyCapitalization from "utilities/object/getObjectValueWithAnyCapitalization";
-import { AxiosHeaders, AxiosResponseHeaders } from "axios";
 
 const contentTypeHeaderName = "content-type";
 

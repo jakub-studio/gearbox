@@ -1,6 +1,6 @@
 {
-  "name": "web",
-  "version": "1.0.0",
+  "name": "gearbox",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "next": "^13.4.1",
+    "next-auth": "^4.22.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "ui": "*"
